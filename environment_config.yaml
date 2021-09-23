@@ -1,0 +1,20 @@
+environment_config:
+  path: private/environment_config.dart
+  fields:
+    apiUrl:
+      type: String
+      short_name: u
+    apiEndpoint:
+      type: String
+      short_name: e
+    apiPort:
+      type: String
+      default: ''
+      short_name: p
+    tokenName:
+      type: String
+      short_name: t
+    isSecure:
+      type: bool
+      default: false
+      short_name: s
