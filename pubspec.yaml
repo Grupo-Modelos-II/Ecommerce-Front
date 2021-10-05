@@ -32,6 +32,7 @@ dependencies:
   jwt_decode: ^0.3.1
   logger: ^1.1.0
   material_design_icons_flutter: ^4.0.5755
+  shared_preferences: ^2.0.8
 
 dev_dependencies:
   environment_config: ^3.0.0
