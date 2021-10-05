@@ -20,18 +20,15 @@ class ClientRequest {
     required this.credits,
   });
 
-  Map<String, dynamic> toDict(){
+  Map<String, dynamic> toDict() {
     return {
-      ' 'id':self.id,
-            'id_identifier_type':self.id_identifier_type,
-            'identifier':self.identifier,
-            'name':self.name,
-            'email':self.email,
-            'password':self.password,
-            'location':self.location,
-            'credits':self.credits,
-            'identifier_type':self.identifier_type,
-            'transactions':self.transactions
+      'id_identifier_type': this.idIdentifierType,
+      'identifier': this.identifier,
+      'name': this.name,
+      'email': this.email,
+      'password': this.password,
+      'location': this.location,
+      'credits': this.credits
     };
   }
 }

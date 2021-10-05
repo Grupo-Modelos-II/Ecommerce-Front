@@ -1,9 +1,7 @@
-import 'package:ecommerce/services/productsHandler.dart';
 import 'package:flutter/material.dart';
 import 'screens/screens.dart';
 
 void main() {
-  ProductHandler().getAllProducts();
   runApp(MyApp());
 }
 

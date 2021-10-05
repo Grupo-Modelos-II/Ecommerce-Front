@@ -10,13 +10,13 @@ import 'package:ecommerce/models/product.dart';
 
 class ProductHandler {
   HttpClient _httpClient = HttpClient();
-  Future<List<ProductResponse>> getAllProducts() async {
+  Future<List<ProductResponse>>? getAllProducts() async {
     final Response response = await _httpClient.get('/product');
     final List<dynamic> productList = json.decode(response.body);
     return fromJsonListProduct(productList);
   }
 
-  Future<ProductResponse> getProduct(String id) async {
+  Future<ProductResponse>? getProduct(String id) async {
     final Response response = await _httpClient.get('/product/$id');
     final dynamic product = json.decode(response.body);
     return fromJsonProduct(product);

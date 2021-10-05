@@ -1,14 +1,38 @@
+import 'package:ecommerce/services/handlers/authHandler.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-
+import 'package:ecommerce/util/alerts.dart';
 import 'package:ecommerce/constants/constants.dart';
 
 class Header extends StatefulWidget {
+  final AuthHandler authHandler = AuthHandler();
   @override
   _HeaderState createState() => _HeaderState();
 }
 
 class _HeaderState extends State<Header> {
+  late String email, password;
+
+  Future<dynamic> _login(BuildContext context) async {
+    final response =
+        await this.widget.authHandler.login(this.email, this.password);
+    if (!response) {
+      return modal(
+        context,
+        title: 'Error',
+        content: Text('Nombre de usuario y/o contraseña incorrectos'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Ok'),
+          )
+        ],
+      );
+    } else {
+      Navigator.pop(context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -79,9 +103,50 @@ class _HeaderState extends State<Header> {
                                     'Bienvenido',
                                     style: TextStyle(color: Color(0xFFC2C2C2)),
                                   ),
-                                  Text(
-                                    'Iniciar sesión/Registrarse',
-                                    style: TextStyle(color: Colors.white),
+                                  TextButton(
+                                    style: TextButton.styleFrom(
+                                      textStyle: TextStyle(color: Colors.white),
+                                    ),
+                                    onPressed: () => modal(
+                                      context,
+                                      title: 'Bienvenido',
+                                      content: SizedBox(
+                                        height: 100,
+                                        width: 100,
+                                        child: Column(
+                                          children: [
+                                            TextField(
+                                                decoration: InputDecoration(
+                                                    border:
+                                                        OutlineInputBorder(),
+                                                    hintText:
+                                                        'Correo Electronico'),
+                                                onChanged: (email) {
+                                                  this.email = email;
+                                                }),
+                                            TextField(
+                                              obscureText: true,
+                                              decoration: InputDecoration(
+                                                  border: OutlineInputBorder(),
+                                                  hintText: 'Contraseña'),
+                                              onChanged: (password) {
+                                                this.password = password;
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () async {
+                                            return await _login(context);
+                                          },
+                                          child: Text('Iniciar Sesión'),
+                                        )
+                                      ],
+                                    ),
+                                    child: const Text(
+                                        'Iniciar sesión/Registrarse'),
                                   )
                                 ],
                               ),
