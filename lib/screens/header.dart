@@ -147,8 +147,15 @@ class _HeaderState extends State<Header> {
                                         )
                                       ],
                                     ),
-                                    child: const Text(
-                                        'Iniciar sesión/Registrarse'),
+                                    child: const Text('Iniciar sesión'),
+                                  ),
+                                  TextButton(
+                                    style: TextButton.styleFrom(
+                                      textStyle: TextStyle(color: Colors.white),
+                                    ),
+                                    onPressed: () => Navigator.pushNamed(
+                                        context, '/register'),
+                                    child: const Text('Registrarse'),
                                   )
                                 ],
                               ),

@@ -57,11 +57,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                         .map(
                                           (ProductResponse product) =>
                                               productCard(
-                                            'logo',
-                                            product.cost,
-                                            true,
-                                            product.name,
                                             context,
+                                            'logo',
+                                            true,
+                                            product,
                                             key: Key(product.id),
                                           ),
                                         )
@@ -95,11 +94,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                         .map(
                                           (ProductResponse product) =>
                                               productCard(
-                                            'logo',
-                                            product.cost,
-                                            true,
-                                            product.name,
                                             context,
+                                            'logo',
+                                            true,
+                                            product,
                                             key: Key(product.id),
                                           ),
                                         )
@@ -114,8 +112,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             width: MediaQuery.of(context).size.width * 0.8,
                             child: ElevatedButton(
                               style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(
-                                      Palette.mainColor)),
+                                backgroundColor: MaterialStateProperty.all(
+                                    Palette.mainColor),
+                              ),
                               onPressed: null,
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
@@ -153,10 +152,11 @@ Widget bannerView() {
 }
 
 Widget productCard(
-    String img, int price, bool status, String name, BuildContext context,
+    BuildContext context, String img, bool status, ProductResponse product,
     {Key? key}) {
   return TextButton(
-    onPressed: () => null,
+    onPressed: () =>
+        Navigator.pushNamed(context, '/product', arguments: product.id),
     child: Card(
       key: key,
       elevation: 4,
@@ -174,7 +174,7 @@ Widget productCard(
             ),
             SizedBox(height: 5),
             Text(
-              '\$ $price',
+              '\$ ${product.cost}',
               style: Style.productPrice,
             ),
             SizedBox(height: 5),
@@ -185,7 +185,7 @@ Widget productCard(
             ),
             SizedBox(height: 5),
             Text(
-              name,
+              product.name,
               style: Style.productPrice,
             ),
           ],

@@ -1,6 +1,7 @@
 import 'package:ecommerce/constants/colors.dart';
 import 'package:ecommerce/screens/footer.dart';
 import 'package:ecommerce/screens/header.dart';
+import 'package:ecommerce/util/logger.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ecommerce/constants/constants.dart';
@@ -11,8 +12,11 @@ class ProductScreen extends StatefulWidget {
 }
 
 class _ProductState extends State<ProductScreen> {
+  late final String productId;
   @override
   Widget build(BuildContext context) {
+    productId = ModalRoute.of(context)!.settings.arguments as String;
+    LoggerUtil.logger.i(productId);
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
