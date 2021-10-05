@@ -13,12 +13,12 @@ class _HeaderState extends State<Header> {
   Widget build(BuildContext context) {
     return Container(
       color: Palette.mainColor,
-      height: 80,
+      height: 100,
       child: Row(
         children: [
           Container(
             child: Image.asset('images/logo.png'),
-            padding: EdgeInsets.only(left: 50, right: 50),
+            padding: EdgeInsets.only(left: 50, right: 50, top: 10, bottom: 10),
           ),
           Expanded(
             child: Row(
