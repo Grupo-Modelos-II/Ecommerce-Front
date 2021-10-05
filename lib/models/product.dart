@@ -13,6 +13,15 @@ class ProductRequest {
     required this.description,
     required this.cost,
   });
+
+  Map<String,dynamic> toDict(){
+    return {
+      'name':this.name,
+      'idCategory':this.idCategory,
+      'description':this.description,
+      'cost':this.cost
+    };
+  }
 }
 
 class ProductResponse extends Generic {

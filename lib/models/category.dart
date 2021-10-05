@@ -4,6 +4,10 @@ class CategoryRequest {
   final String name;
 
   CategoryRequest({required this.name});
+
+  Map<String,String> toDict(){
+    return {'name':this.name};
+  }
 }
 
 class CategoryResponse extends Generic {

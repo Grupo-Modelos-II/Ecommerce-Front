@@ -111,9 +111,11 @@ class _HeaderState extends State<Header> {
                                       context,
                                       title: 'Bienvenido',
                                       content: SizedBox(
-                                        height: 100,
+                                        height: 150,
                                         width: 100,
                                         child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             TextField(
                                                 decoration: InputDecoration(

@@ -6,6 +6,13 @@ class TransactionRequest {
   String idClient;
   int total;
   TransactionRequest({required this.idClient, required this.total});
+
+  Map<String,dynamic> toDict(){
+    return {
+      'idClient':this.idClient,
+      'total':this.total
+    };
+  }
 }
 
 class TransactionResponse extends Generic {

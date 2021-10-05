@@ -12,6 +12,15 @@ class PurchasedRequest {
     required this.amount,
     required this.cost,
   });
+
+  Map<String,dynamic> toDict(){
+    return {
+      'idTransaccion':this.idTransaction,
+      'idProduct':this.idProduct,
+      'amount':this.amount,
+      'cost':this.cost
+    };
+  }
 }
 
 class PurchasedResponse extends Generic {

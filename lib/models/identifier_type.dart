@@ -3,6 +3,10 @@ import 'generic.dart';
 class IdentifierTypeRequest {
   String name;
   IdentifierTypeRequest({required this.name});
+  Map<String, String> toDict(){
+    return {'name':this.name};
+  }
+
 }
 
 class IdentifierTypeResponse extends Generic {

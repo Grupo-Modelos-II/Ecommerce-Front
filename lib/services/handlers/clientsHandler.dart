@@ -17,10 +17,11 @@ class ClientHandler {
     return fromJsonClient(client);
   }
 
-  Future<void> register(ClientRequest request) async {
+  Future<bool> register(ClientRequest request) async {
     final Response response =
         await _httpClient.post('/', body: json.encode(request.toDict()));
     final dynamic client = json.decode(response.body);
     LoggerUtil.logger.v("Respuesta del servidor: $client");
+    return fromJsonClient(client) != null;
   }
 }
