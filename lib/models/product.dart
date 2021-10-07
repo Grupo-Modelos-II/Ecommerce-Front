@@ -32,7 +32,7 @@ class ProductResponse extends Generic {
   late final String description;
   late final int cost;
 
-  late final String mainImage;
+  late final String? mainImage;
   late final List<dynamic> images;
 
   ProductResponse(

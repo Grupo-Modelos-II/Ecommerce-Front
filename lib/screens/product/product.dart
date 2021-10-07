@@ -44,7 +44,7 @@ class _ProductState extends State<ProductScreen> {
                             SizedBox(width: 15),
                             ClipRRect(
                               child: Image.network(
-                                product.mainImage,
+                                product.mainImage ?? '',
                                 height: MediaQuery.of(context).size.width * 0.4,
                                 width: MediaQuery.of(context).size.width * 0.4,
                                 fit: BoxFit.fill,

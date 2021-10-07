@@ -1,6 +1,7 @@
 import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/screens/footer.dart';
 import 'package:ecommerce/services/handlers/productsHandler.dart';
+import 'package:ecommerce/util/logger.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ecommerce/constants/constants.dart';
@@ -129,6 +130,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               );
             } else {
+              LoggerUtil.logger.e(snapshot.error);
               return Center(
                 child: CircularProgressIndicator(),
               );
@@ -162,7 +164,7 @@ Widget productCard(BuildContext context, ProductResponse product, {Key? key}) {
           children: [
             Center(
               child: Image.network(
-                product.mainImage,
+                product.mainImage ?? '',
                 width: MediaQuery.of(context).size.width * 0.15,
                 height: MediaQuery.of(context).size.width * 0.15,
               ),
