@@ -1,6 +1,9 @@
-import 'package:ecommerce/services/handlers/authHandler.dart';
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import 'package:ecommerce/services/handlers/authHandler.dart';
+
 import 'package:ecommerce/util/alerts.dart';
 import 'package:ecommerce/constants/constants.dart';
 
@@ -166,17 +169,17 @@ class _HeaderState extends State<Header> {
                           child: Row(
                             children: [
                               Icon(
-                                MdiIcons.facebook,
+                                FontAwesomeIcons.facebook,
                                 color: Colors.white,
                               ),
                               SizedBox(width: 10),
                               Icon(
-                                MdiIcons.instagram,
+                                FontAwesomeIcons.instagram,
                                 color: Colors.white,
                               ),
                               SizedBox(width: 10),
                               Icon(
-                                MdiIcons.twitter,
+                                FontAwesomeIcons.twitter,
                                 color: Colors.white,
                               ),
                               SizedBox(width: 10),
