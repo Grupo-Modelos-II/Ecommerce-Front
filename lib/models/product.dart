@@ -32,7 +32,7 @@ class ProductResponse extends Generic {
   late final String description;
   late final int cost;
 
-  late final String? mainImage;
+  late final String mainImage;
   late final List<dynamic> images;
 
   ProductResponse(
@@ -51,7 +51,7 @@ class ProductResponse extends Generic {
     category = CategoryResponse.fromJson(json['category']);
     description = json['description'];
     cost = json['cost'];
-    mainImage = json['mainImage'];
+    mainImage = json['mainImage'] ?? '';
     images = json['images'];
   }
 }

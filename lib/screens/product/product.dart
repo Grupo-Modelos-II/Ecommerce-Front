@@ -44,10 +44,21 @@ class _ProductState extends State<ProductScreen> {
                             SizedBox(width: 15),
                             ClipRRect(
                               child: Image.network(
-                                product.mainImage ?? '',
+                                product.mainImage,
                                 height: MediaQuery.of(context).size.width * 0.4,
                                 width: MediaQuery.of(context).size.width * 0.4,
                                 fit: BoxFit.fill,
+                                errorBuilder: (BuildContext context,
+                                        Object exception,
+                                        StackTrace? stackTrace) =>
+                                    Image.asset(
+                                  'images/notfound.png',
+                                  height:
+                                      MediaQuery.of(context).size.width * 0.4,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.4,
+                                  fit: BoxFit.fill,
+                                ),
                               ),
                             ),
                           ],
@@ -122,9 +133,19 @@ class _ProductState extends State<ProductScreen> {
 
 Widget secondaryImage(String img, BuildContext context) {
   return ClipRRect(
-    child: Image.network(img,
+    child: Image.network(
+      img,
+      width: MediaQuery.of(context).size.width * 0.13,
+      height: MediaQuery.of(context).size.width * 0.13,
+      fit: BoxFit.fill,
+      errorBuilder:
+          (BuildContext context, Object exception, StackTrace? stackTrace) =>
+              Image.asset(
+        'images/notfound.png',
         width: MediaQuery.of(context).size.width * 0.13,
         height: MediaQuery.of(context).size.width * 0.13,
-        fit: BoxFit.fill),
+        fit: BoxFit.fill,
+      ),
+    ),
   );
 }

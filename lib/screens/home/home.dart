@@ -89,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
-                                    children: products!
+                                    children: products
                                         .map(
                                           (ProductResponse product) =>
                                               productCard(
@@ -164,9 +164,16 @@ Widget productCard(BuildContext context, ProductResponse product, {Key? key}) {
           children: [
             Center(
               child: Image.network(
-                product.mainImage ?? '',
+                product.mainImage,
                 width: MediaQuery.of(context).size.width * 0.15,
                 height: MediaQuery.of(context).size.width * 0.15,
+                errorBuilder: (BuildContext context, Object exception,
+                        StackTrace? stackTrace) =>
+                    Image.asset(
+                  'images/notfound.png',
+                  width: MediaQuery.of(context).size.width * 0.15,
+                  height: MediaQuery.of(context).size.width * 0.15,
+                ),
               ),
             ),
             SizedBox(height: 5),
