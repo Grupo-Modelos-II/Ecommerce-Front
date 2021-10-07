@@ -58,8 +58,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                           (ProductResponse product) =>
                                               productCard(
                                             context,
-                                            'logo',
-                                            true,
                                             product,
                                             key: Key(product.id),
                                           ),
@@ -95,8 +93,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                           (ProductResponse product) =>
                                               productCard(
                                             context,
-                                            'logo',
-                                            true,
                                             product,
                                             key: Key(product.id),
                                           ),
@@ -151,12 +147,11 @@ Widget bannerView() {
   );
 }
 
-Widget productCard(
-    BuildContext context, String img, bool status, ProductResponse product,
-    {Key? key}) {
+Widget productCard(BuildContext context, ProductResponse product, {Key? key}) {
+  final bool status = product.amount > 0;
   return TextButton(
     onPressed: () =>
-        Navigator.pushNamed(context, '/product', arguments: product.id),
+        Navigator.pushNamed(context, '/product', arguments: product),
     child: Card(
       key: key,
       elevation: 4,
@@ -166,8 +161,8 @@ Widget productCard(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Center(
-              child: Image.asset(
-                'images/$img.png',
+              child: Image.network(
+                product.mainImage,
                 width: MediaQuery.of(context).size.width * 0.15,
                 height: MediaQuery.of(context).size.width * 0.15,
               ),

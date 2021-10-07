@@ -1,7 +1,7 @@
 import 'package:ecommerce/constants/colors.dart';
+import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/screens/footer.dart';
 import 'package:ecommerce/screens/header.dart';
-import 'package:ecommerce/util/logger.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ecommerce/constants/constants.dart';
@@ -12,11 +12,10 @@ class ProductScreen extends StatefulWidget {
 }
 
 class _ProductState extends State<ProductScreen> {
-  late final String productId;
+  late final ProductResponse product;
   @override
   Widget build(BuildContext context) {
-    productId = ModalRoute.of(context)!.settings.arguments as String;
-    LoggerUtil.logger.i(productId);
+    product = ModalRoute.of(context)!.settings.arguments as ProductResponse;
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -36,17 +35,16 @@ class _ProductState extends State<ProductScreen> {
                               child: Column(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  secondaryImage('objeto', context),
-                                  secondaryImage('objeto', context),
-                                  secondaryImage('objeto', context),
-                                ],
+                                children: product.images
+                                    .map((image) =>
+                                        secondaryImage(image, context))
+                                    .toList(),
                               ),
                             ),
                             SizedBox(width: 15),
                             ClipRRect(
-                              child: Image.asset(
-                                'images/objeto.png',
+                              child: Image.network(
+                                product.mainImage,
                                 height: MediaQuery.of(context).size.width * 0.4,
                                 width: MediaQuery.of(context).size.width * 0.4,
                                 fit: BoxFit.fill,
@@ -66,14 +64,14 @@ class _ProductState extends State<ProductScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Teclado Gamer',
+                                Text(product.name,
                                     style: Style.productInfoTitle),
                                 SizedBox(height: 30),
-                                Text('\$ 200000',
+                                Text('\$ ${product.cost}',
                                     style: Style.productInfoPrice),
                                 SizedBox(height: 30),
                                 Text(
-                                  'Descripción del producto, bla abla l lorem ipsum, bla bla bla, estc, que blablablabla.',
+                                  product.description,
                                   style: Style.productInfoText,
                                 )
                               ],
@@ -124,7 +122,7 @@ class _ProductState extends State<ProductScreen> {
 
 Widget secondaryImage(String img, BuildContext context) {
   return ClipRRect(
-    child: Image.asset('images/$img.png',
+    child: Image.network(img,
         width: MediaQuery.of(context).size.width * 0.13,
         height: MediaQuery.of(context).size.width * 0.13,
         fit: BoxFit.fill),
