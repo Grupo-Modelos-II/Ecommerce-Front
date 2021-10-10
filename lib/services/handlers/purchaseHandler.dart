@@ -11,6 +11,6 @@ class PurchaseHandler {
         body: json.encode(request.toDict()));
     var bodyResponse = json.decode(response.body);
     PurchasedResponse parseResponseData = fromJsonPurchased(bodyResponse);
-    return parseResponseData == null;
+    return parseResponseData != null;
   }
 }

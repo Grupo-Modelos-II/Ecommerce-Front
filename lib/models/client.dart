@@ -1,6 +1,5 @@
 import 'generic.dart';
 import 'identifier_type.dart';
-
 class ClientRequest {
   String idIdentifierType;
   String identifier;
@@ -53,9 +52,10 @@ class ClientResponse extends Generic {
   });
 
   ClientResponse.fromJson(dynamic json) {
+    
     id = json['id'];
     id_identifier_type =
-        IdentifierTypeResponse.fromJson(json['id_identifier_type']);
+        IdentifierTypeResponse.fromJson(json['identifier_type']);
     name = json['name'];
     email = json['email'];
     password = json['password'];

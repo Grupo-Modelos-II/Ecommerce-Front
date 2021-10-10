@@ -11,13 +11,19 @@ import 'package:ecommerce/models/transaction.dart';
 class TransactionHandler {
   HttpClient _httpClient = HttpClient();
   Future<List<TransactionResponse>> getAllTransactions() async {
-    final Response response = await _httpClient.get('/Transaction');
+    final Response response = await _httpClient.get('/transaction');
     final List<dynamic> transactionList = json.decode(response.body);
     return fromJsonListTransaction(transactionList);
   }
 
   Future<TransactionResponse> getTransaction(String id) async {
-    final Response response = await _httpClient.get('/Transaction/$id');
+    final Response response = await _httpClient.get('/transaction/$id');
+    final dynamic transaction = json.decode(response.body);
+    return fromJsonTransaction(transaction);
+  }
+
+  Future<TransactionResponse> createTransaction(TransactionRequest request) async{
+    final Response response = await _httpClient.post('/transaction',body: json.encode(request.toDict()));
     final dynamic transaction = json.decode(response.body);
     return fromJsonTransaction(transaction);
   }

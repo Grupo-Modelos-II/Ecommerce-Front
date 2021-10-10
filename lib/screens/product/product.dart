@@ -1,9 +1,21 @@
-import 'package:ecommerce/constants/colors.dart';
-import 'package:ecommerce/models/product.dart';
-import 'package:ecommerce/screens/footer.dart';
-import 'package:ecommerce/screens/header.dart';
+import 'dart:convert' show json;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:ecommerce/services/handlers/transactionHandler.dart';
+import 'package:ecommerce/services/handlers/purchaseHandler.dart';
+
+import 'package:ecommerce/models/product.dart';
+import 'package:ecommerce/models/transaction.dart';
+import 'package:ecommerce/models/purchased.dart';
+
+import 'package:ecommerce/screens/footer.dart';
+import 'package:ecommerce/screens/header.dart';
+import 'package:ecommerce/util/alerts.dart';
+import 'package:ecommerce/util/logger.dart';
+import 'package:ecommerce/constants/colors.dart';
 import 'package:ecommerce/constants/constants.dart';
 
 class ProductScreen extends StatefulWidget {
@@ -12,7 +24,54 @@ class ProductScreen extends StatefulWidget {
 }
 
 class _ProductState extends State<ProductScreen> {
-  late final ProductResponse product;
+  late ProductResponse product;
+  TransactionHandler transactionHandler = TransactionHandler();
+  PurchaseHandler purchaseHandler = PurchaseHandler();
+  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
+  Future<dynamic> purchaseProduct(BuildContext context,ProductResponse requestData) async{
+    try{
+      LoggerUtil.logger.v(requestData);
+      final SharedPreferences prefs = await this._prefs;
+      LoggerUtil.logger.v(prefs.getString('token') ?? '');
+      String idClient = json.decode(prefs.getString('token') ?? '')['id_client'];
+      LoggerUtil.logger.d(idClient);
+      TransactionRequest request = TransactionRequest(idClient:idClient, total: product.amount);
+      TransactionResponse trasactionCreated = await transactionHandler.createTransaction(request);
+      
+      PurchasedRequest requestDataPurchase = PurchasedRequest(
+        idTransaction: trasactionCreated.id,
+        idProduct: requestData.id,
+        amount: requestData.amount,
+        cost: requestData.cost
+      );
+
+      bool isPurchasedCreated = await purchaseHandler.createPurchase(requestDataPurchase);
+      if(isPurchasedCreated){
+        Navigator.pushNamed(context,'/');
+      }else{
+        throw Exception();
+      }
+
+    }catch(e){
+      LoggerUtil.logger.e(e.toString());
+      return modal(
+        context,
+        title: 'Error',
+        content: Text('Ha ocurrido un error durante la transacción'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Ok'),
+          )
+        ],
+      );
+    }
+
+
+
+  }
+
   @override
   Widget build(BuildContext context) {
     product = ModalRoute.of(context)!.settings.arguments as ProductResponse;
@@ -97,7 +156,7 @@ class _ProductState extends State<ProductScreen> {
                                       backgroundColor:
                                           MaterialStateProperty.all(
                                               Palette.mainColor)),
-                                  onPressed: null,
+                                  onPressed: () async => await purchaseProduct(context,product),
                                   child: Text('Comprar ahora',
                                       style: Style.btnPurchase),
                                 ),
@@ -109,7 +168,9 @@ class _ProductState extends State<ProductScreen> {
                                       backgroundColor:
                                           MaterialStateProperty.all(
                                               Color(0xFFBFD9F6))),
-                                  onPressed: null,
+                                  onPressed: (){
+
+                                  },
                                   child: Text('Agregar al carrito',
                                       style: Style.btnCart),
                                 ),
@@ -130,6 +191,8 @@ class _ProductState extends State<ProductScreen> {
     );
   }
 }
+
+
 
 Widget secondaryImage(String img, BuildContext context) {
   return ClipRRect(
