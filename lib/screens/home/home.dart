@@ -23,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
           builder: (BuildContext context,
               AsyncSnapshot<List<ProductResponse>> snapshot) {
             if (snapshot.hasData) {
-              final List<ProductResponse>? products = snapshot.data;
+              final List<ProductResponse> products = snapshot.data ?? [];
               return Column(
                 children: [
                   Header(),
@@ -54,12 +54,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
-                                    children: products!
+                                    children: products
                                         .map(
                                           (ProductResponse product) =>
-                                              productCard(
-                                            context,
-                                            product,
+                                              ProductCard(
+                                            product: product,
                                             key: Key(product.id),
                                           ),
                                         )
@@ -77,7 +76,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.only(
-                                      left: 20.0, top: 20.0),
+                                    left: 20.0,
+                                    top: 20.0,
+                                  ),
                                   child: Text(
                                     'Ofertas',
                                     style: Style.cardTitle,
@@ -85,16 +86,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.symmetric(
-                                      vertical: 20.0),
+                                    vertical: 20.0,
+                                  ),
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
                                     children: products
                                         .map(
                                           (ProductResponse product) =>
-                                              productCard(
-                                            context,
-                                            product,
+                                              ProductCard(
+                                            product: product,
                                             key: Key(product.id),
                                           ),
                                         )
@@ -110,7 +111,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: ElevatedButton(
                               style: ButtonStyle(
                                 backgroundColor: MaterialStateProperty.all(
-                                    Palette.mainColor),
+                                  Palette.mainColor,
+                                ),
                               ),
                               onPressed: null,
                               child: Padding(
@@ -130,7 +132,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               );
             } else {
-              LoggerUtil.logger.e(snapshot.error);
+              if (snapshot.hasError) {
+                LoggerUtil.logger.e(snapshot.error);
+                return Center(
+                  child: Text('Error al cargar los productos'),
+                );
+              }
               return Center(
                 child: CircularProgressIndicator(),
               );
@@ -149,52 +156,58 @@ Widget bannerView() {
   );
 }
 
-Widget productCard(BuildContext context, ProductResponse product, {Key? key}) {
-  final bool status = product.amount > 0;
-  return TextButton(
-    onPressed: () =>
-        Navigator.pushNamed(context, '/product', arguments: product),
-    child: Card(
-      key: key,
-      elevation: 4,
-      child: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Image.network(
-                product.mainImage,
-                width: MediaQuery.of(context).size.width * 0.15,
-                height: MediaQuery.of(context).size.width * 0.15,
-                errorBuilder: (BuildContext context, Object exception,
-                        StackTrace? stackTrace) =>
-                    Image.asset(
-                  'images/notfound.png',
+class ProductCard extends StatelessWidget {
+  final ProductResponse product;
+
+  ProductCard({required this.product, Key? key}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    final bool status = product.amount > 0;
+    return TextButton(
+      onPressed: () =>
+          Navigator.pushNamed(context, '/product', arguments: product),
+      child: Card(
+        key: key,
+        elevation: 4,
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Image.network(
+                  product.mainImage,
                   width: MediaQuery.of(context).size.width * 0.15,
                   height: MediaQuery.of(context).size.width * 0.15,
+                  errorBuilder: (BuildContext context, Object exception,
+                          StackTrace? _) =>
+                      Image.asset(
+                    'images/notfound.png',
+                    width: MediaQuery.of(context).size.width * 0.15,
+                    height: MediaQuery.of(context).size.width * 0.15,
+                  ),
                 ),
               ),
-            ),
-            SizedBox(height: 5),
-            Text(
-              '\$ ${product.cost}',
-              style: Style.productPrice,
-            ),
-            SizedBox(height: 5),
-            Text(
-              status ? 'Disponible' : 'Agotado',
-              style: Style.productStatus
-                  .copyWith(color: status ? Colors.green : Colors.red),
-            ),
-            SizedBox(height: 5),
-            Text(
-              product.name,
-              style: Style.productPrice,
-            ),
-          ],
+              SizedBox(height: 5),
+              Text(
+                '\$ ${product.cost}',
+                style: Style.productPrice,
+              ),
+              SizedBox(height: 5),
+              Text(
+                status ? 'Disponible' : 'Agotado',
+                style: Style.productStatus
+                    .copyWith(color: status ? Colors.green : Colors.red),
+              ),
+              SizedBox(height: 5),
+              Text(
+                product.name,
+                style: Style.productPrice,
+              ),
+            ],
+          ),
         ),
       ),
-    ),
-  );
+    );
+  }
 }

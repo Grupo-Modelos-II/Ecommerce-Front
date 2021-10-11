@@ -33,6 +33,8 @@ dependencies:
   logger: ^1.1.0
   shared_preferences: ^2.0.8
   font_awesome_flutter: ^9.1.0
+  jwt_decoder: ^2.0.1
+  provider: ^6.0.1
 
 dev_dependencies:
   environment_config: ^3.0.0

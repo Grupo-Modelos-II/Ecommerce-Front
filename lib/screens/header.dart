@@ -106,51 +106,72 @@ class _HeaderState extends State<Header> {
                                     'Bienvenido',
                                     style: TextStyle(color: Color(0xFFC2C2C2)),
                                   ),
-                                  TextButton(
-                                    style: TextButton.styleFrom(
-                                      textStyle: TextStyle(color: Colors.white),
-                                    ),
-                                    onPressed: () => modal(
-                                      context,
-                                      title: 'Bienvenido',
-                                      content: SizedBox(
-                                        height: 150,
-                                        width: 100,
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            TextField(
-                                                decoration: InputDecoration(
-                                                    border:
-                                                        OutlineInputBorder(),
-                                                    hintText:
-                                                        'Correo Electronico'),
-                                                onChanged: (email) {
-                                                  this.email = email;
-                                                }),
-                                            TextField(
-                                              obscureText: true,
-                                              decoration: InputDecoration(
-                                                  border: OutlineInputBorder(),
-                                                  hintText: 'Contraseña'),
-                                              onChanged: (password) {
-                                                this.password = password;
-                                              },
+                                  FutureBuilder(
+                                    builder: (BuildContext context,
+                                        AsyncSnapshot<String> snapshot) {
+                                      if (snapshot.hasData) {
+                                        return Text('Bienvenido Usuario');
+                                      } else {
+                                        if (snapshot.hasError) {
+                                          return Text(
+                                            'Error',
+                                            style: TextStyle(
+                                              color: Color(0xFFC2C2C2),
                                             ),
-                                          ],
-                                        ),
-                                      ),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () async {
-                                            return await _login(context);
-                                          },
-                                          child: Text('Iniciar Sesión'),
-                                        )
-                                      ],
-                                    ),
-                                    child: const Text('Iniciar sesión'),
+                                          );
+                                        }
+                                        return TextButton(
+                                          style: TextButton.styleFrom(
+                                            textStyle: TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          onPressed: () => modal(
+                                            context,
+                                            title: 'Bienvenido',
+                                            content: SizedBox(
+                                              height: 150,
+                                              width: 100,
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  TextField(
+                                                      decoration: InputDecoration(
+                                                          border:
+                                                              OutlineInputBorder(),
+                                                          hintText:
+                                                              'Correo Electronico'),
+                                                      onChanged: (email) {
+                                                        this.email = email;
+                                                      }),
+                                                  TextField(
+                                                    obscureText: true,
+                                                    decoration: InputDecoration(
+                                                        border:
+                                                            OutlineInputBorder(),
+                                                        hintText: 'Contraseña'),
+                                                    onChanged: (password) {
+                                                      this.password = password;
+                                                    },
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () async {
+                                                  return await _login(context);
+                                                },
+                                                child: Text('Iniciar Sesión'),
+                                              )
+                                            ],
+                                          ),
+                                          child: const Text('Iniciar sesión'),
+                                        );
+                                      }
+                                    },
                                   ),
                                   TextButton(
                                     style: TextButton.styleFrom(
