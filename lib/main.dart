@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
       title: 'Ecommerce',
       debugShowCheckedModeBanner: false,
       routes: {
-        '/': (BuildContext context) => HomeScreen(),
+        '/': (BuildContext context) => HistoryScreen(),
         '/register': (BuildContext context) => SignUp(),
         '/product': (BuildContext context) => ProductScreen(),
         '/cart': (BuildContext context) => CartScreen(),
