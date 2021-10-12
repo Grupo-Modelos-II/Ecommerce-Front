@@ -1,7 +1,10 @@
 import 'dart:convert' show json;
+import 'package:ecommerce/models/providers/ProductList.dart';
+import 'package:ecommerce/services/handlers/authHandler.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:provider/src/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:ecommerce/services/handlers/transactionHandler.dart';
@@ -27,38 +30,42 @@ class _ProductState extends State<ProductScreen> {
   late ProductResponse product;
   TransactionHandler transactionHandler = TransactionHandler();
   PurchaseHandler purchaseHandler = PurchaseHandler();
-  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  AuthHandler authHandler = AuthHandler();
 
-  Future<dynamic> purchaseProduct(BuildContext context,ProductResponse requestData) async{
-    try{
-      LoggerUtil.logger.v(requestData);
-      final SharedPreferences prefs = await this._prefs;
-      LoggerUtil.logger.v(prefs.getString('token') ?? '');
-      String idClient = json.decode(prefs.getString('token') ?? '')['id_client'];
-      LoggerUtil.logger.d(idClient);
-      TransactionRequest request = TransactionRequest(idClient:idClient, total: product.amount);
-      TransactionResponse trasactionCreated = await transactionHandler.createTransaction(request);
-      
-      PurchasedRequest requestDataPurchase = PurchasedRequest(
-        idTransaction: trasactionCreated.id,
-        idProduct: requestData.id,
-        amount: requestData.amount,
-        cost: requestData.cost
-      );
+  Future<dynamic> purchaseProduct(BuildContext context) async {
+    String? message;
+    try {
+      final String token = await authHandler.getToken();
+      if (token.isNotEmpty) {
+        final Map<String, dynamic> claims = await authHandler.getTokenClaims();
+        TransactionRequest request = TransactionRequest(
+            idClient: claims['id_client'], total: product.amount);
+        TransactionResponse trasactionCreated =
+            await transactionHandler.createTransaction(request);
 
-      bool isPurchasedCreated = await purchaseHandler.createPurchase(requestDataPurchase);
-      if(isPurchasedCreated){
-        Navigator.pushNamed(context,'/');
-      }else{
+        PurchasedRequest requestDataPurchase = PurchasedRequest(
+            idTransaction: trasactionCreated.id,
+            idProduct: product.id,
+            amount: product.amount,
+            cost: product.cost);
+
+        bool isPurchasedCreated =
+            await purchaseHandler.createPurchase(requestDataPurchase);
+        if (isPurchasedCreated) {
+          Navigator.pushNamed(context, '/');
+        } else {
+          throw Exception();
+        }
+      } else {
+        message = "Debe iniciar sesion";
         throw Exception();
       }
-
-    }catch(e){
-      LoggerUtil.logger.e(e.toString());
+    } catch (e) {
+      LoggerUtil.logger.e(e);
       return modal(
         context,
         title: 'Error',
-        content: Text('Ha ocurrido un error durante la transacción'),
+        content: Text(message ?? "No pudimos realizar la compra"),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -67,9 +74,6 @@ class _ProductState extends State<ProductScreen> {
         ],
       );
     }
-
-
-
   }
 
   @override
@@ -156,7 +160,8 @@ class _ProductState extends State<ProductScreen> {
                                       backgroundColor:
                                           MaterialStateProperty.all(
                                               Palette.mainColor)),
-                                  onPressed: () async => await purchaseProduct(context,product),
+                                  onPressed: () async =>
+                                      await purchaseProduct(context),
                                   child: Text('Comprar ahora',
                                       style: Style.btnPurchase),
                                 ),
@@ -168,8 +173,10 @@ class _ProductState extends State<ProductScreen> {
                                       backgroundColor:
                                           MaterialStateProperty.all(
                                               Color(0xFFBFD9F6))),
-                                  onPressed: (){
-
+                                  onPressed: () {
+                                    context
+                                        .read<ProductCart>()
+                                        .addProduct(product);
                                   },
                                   child: Text('Agregar al carrito',
                                       style: Style.btnCart),
@@ -191,8 +198,6 @@ class _ProductState extends State<ProductScreen> {
     );
   }
 }
-
-
 
 Widget secondaryImage(String img, BuildContext context) {
   return ClipRRect(

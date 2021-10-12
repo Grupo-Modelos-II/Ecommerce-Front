@@ -1,8 +1,19 @@
+import 'package:ecommerce/models/providers/ProductList.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'screens/screens.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => ProductCart(),
+        )
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -12,9 +23,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Ecommerce',
       routes: {
-        '/': (context) => HomeScreen(),
-        '/register': (context) => SignUp(),
-        '/product': (context) => ProductScreen(),
+        '/': (BuildContext context) => HomeScreen(),
+        '/register': (BuildContext context) => SignUp(),
+        '/product': (BuildContext context) => ProductScreen(),
+        '/cart': (BuildContext context) => CartScreen(),
       },
     );
   }

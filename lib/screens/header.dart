@@ -1,3 +1,4 @@
+import 'package:ecommerce/models/providers/ProductList.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -7,6 +8,7 @@ import 'package:ecommerce/services/handlers/authHandler.dart';
 
 import 'package:ecommerce/util/alerts.dart';
 import 'package:ecommerce/constants/constants.dart';
+import 'package:provider/src/provider.dart';
 
 class Header extends StatefulWidget {
   final AuthHandler authHandler = AuthHandler();
@@ -39,6 +41,7 @@ class _HeaderState extends State<Header> {
 
   @override
   Widget build(BuildContext context) {
+    final int productList = context.watch<ProductCart>().products.length;
     return Container(
       color: Palette.mainColor,
       height: 100,
@@ -241,23 +244,36 @@ class _HeaderState extends State<Header> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Stack(children: [
-                            Icon(
-                              Icons.shopping_cart_outlined,
-                              size: 30,
-                              color: Colors.white,
-                            ),
-                            Container(
-                              height: 18,
-                              width: 20,
-                              margin: EdgeInsets.only(left: 20),
-                              decoration: BoxDecoration(
-                                  color: Colors.red,
-                                  borderRadius: BorderRadius.circular(5)),
-                              child: Center(
-                                  child: Text('10', style: Style.labelSearch)),
-                            ),
-                          ]),
+                          Stack(
+                            children: [
+                              IconButton(
+                                icon: Icon(
+                                  Icons.shopping_cart_outlined,
+                                  size: 30,
+                                  color: Colors.white,
+                                ),
+                                onPressed: () =>
+                                    Navigator.pushNamed(context, '/cart'),
+                              ),
+                              productList > 0
+                                  ? Container(
+                                      height: 18,
+                                      width: 20,
+                                      margin: EdgeInsets.only(left: 20),
+                                      decoration: BoxDecoration(
+                                        color: Colors.red,
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          productList.toString(),
+                                          style: Style.labelSearch,
+                                        ),
+                                      ),
+                                    )
+                                  : SizedBox.shrink(),
+                            ],
+                          ),
                           Icon(
                             Icons.flag_outlined,
                             size: 30,

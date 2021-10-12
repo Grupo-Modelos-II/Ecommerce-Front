@@ -1,3 +1,4 @@
+import 'package:ecommerce/models/providers/ProductList.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -6,8 +7,7 @@ import 'package:ecommerce/screens/header.dart';
 import 'package:ecommerce/constants/colors.dart';
 import 'package:ecommerce/constants/constants.dart';
 import 'package:ecommerce/models/product.dart';
-
-List<ProductResponse> products = [];
+import 'package:provider/src/provider.dart';
 
 class CartScreen extends StatefulWidget {
   @override
@@ -17,6 +17,8 @@ class CartScreen extends StatefulWidget {
 class _CartState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
+    final List<ProductResponse> products =
+        context.watch<ProductCart>().products;
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -38,9 +40,11 @@ class _CartState extends State<CartScreen> {
                               Text('Carro de compras', style: Style.cardTitle),
                               ElevatedButton(
                                 style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                        Colors.transparent)),
-                                onPressed: null,
+                                  backgroundColor: MaterialStateProperty.all(
+                                      Colors.transparent),
+                                ),
+                                onPressed:
+                                    context.read<ProductCart>().clearProducts,
                                 child: Row(
                                   children: [
                                     Icon(
@@ -61,29 +65,14 @@ class _CartState extends State<CartScreen> {
                             child: Padding(
                               padding: const EdgeInsets.all(20.0),
                               child: Column(
-                                children: [
-                                  item(
-                                      'objeto',
-                                      'Teclado Gamer',
-                                      'Descripción del producto, bla abla l lorem ipsum, bla bla bla, estc, que blablablabla .',
-                                      200000,
-                                      0,
-                                      context),
-                                  item(
-                                      'objeto',
-                                      'Teclado Gamer',
-                                      'Descripción del producto, bla abla l lorem ipsum, bla bla bla, estc, que blablablabla .',
-                                      200000,
-                                      1,
-                                      context),
-                                  item(
-                                      'objeto',
-                                      'Teclado Gamer',
-                                      'Descripción del producto, bla abla l lorem ipsum, bla bla bla, estc, que blablablabla .',
-                                      200000,
-                                      2,
-                                      context),
-                                ],
+                                children: products
+                                    .map(
+                                      (ProductResponse product) => Item(
+                                        product: product,
+                                        key: Key(product.id),
+                                      ),
+                                    )
+                                    .toList(),
                               ),
                             ),
                           )
@@ -159,23 +148,27 @@ class _CartState extends State<CartScreen> {
       ),
     );
   }
+}
 
-  Widget item(String img, String title, String text, int price, int id,
-      BuildContext context) {
+class Item extends StatelessWidget {
+  final ProductResponse product;
+  Item({required this.product, Key? key}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: Row(
         children: [
           ClipRRect(
             child: Image.network(
-              img,
+              product.mainImage,
               width: 150,
               height: 150,
               fit: BoxFit.fill,
               errorBuilder: (BuildContext context, Object exception,
                       StackTrace? stackTrace) =>
                   Image.asset(
-                'images/$img.png',
+                'images/objeto.png',
                 width: 100,
                 height: 100,
                 fit: BoxFit.fill,
@@ -189,25 +182,24 @@ class _CartState extends State<CartScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: Style.cartItemTitle),
+                  Text(product.name, style: Style.cartItemTitle),
                   SizedBox(height: 10),
-                  Text(text, style: Style.cartItemText),
+                  Text(product.description, style: Style.cartItemText),
                 ],
               ),
             ),
           ),
-          Text('\$ $price', style: Style.cartItemPrice),
+          Text('\$ ${product.cost}', style: Style.cartItemPrice),
           IconButton(
-              onPressed: () {
-                setState(() {
-                  products.removeAt(id);
-                });
-              },
-              icon: Icon(
-                Icons.delete_outline,
-                color: Palette.mainColor,
-                size: 34,
-              )),
+            onPressed: () {
+              context.read<ProductCart>().removeProduct(product);
+            },
+            icon: Icon(
+              Icons.delete_outline,
+              color: Palette.mainColor,
+              size: 34,
+            ),
+          ),
         ],
       ),
     );
