@@ -1,8 +1,19 @@
+import 'package:ecommerce/models/providers/ProductList.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'screens/screens.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => ProductCart(),
+        )
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -10,11 +21,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Ecommerce',
+      debugShowCheckedModeBanner: false,
       routes: {
-        '/': (context) => HomeScreen(),
-        '/register': (context) => SignUp(),
-        '/product': (context) => ProductScreen(),
+        '/': (BuildContext context) => HistoryScreen(),
+        '/register': (BuildContext context) => SignUp(),
+        '/product': (BuildContext context) => ProductScreen(),
+        '/cart': (BuildContext context) => CartScreen(),
+        '/history': (BuildContext context) => HistoryScreen(),
       },
     );
   }

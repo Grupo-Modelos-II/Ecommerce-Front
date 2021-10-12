@@ -1,5 +1,6 @@
 import 'package:ecommerce/util/http_client.dart';
 import 'package:ecommerce/util/logger.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import 'dart:convert' show json;
@@ -24,5 +25,14 @@ class AuthHandler {
     } else {
       return false;
     }
+  }
+
+  Future<String> getToken() async {
+    final SharedPreferences prefs = await _prefs;
+    return prefs.getString('token') ?? '';
+  }
+
+  Future<Map<String, dynamic>> getTokenClaims() async {
+    return JwtDecoder.decode(await getToken());
   }
 }

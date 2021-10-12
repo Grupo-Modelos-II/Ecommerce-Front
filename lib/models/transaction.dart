@@ -7,11 +7,8 @@ class TransactionRequest {
   int total;
   TransactionRequest({required this.idClient, required this.total});
 
-  Map<String,dynamic> toDict(){
-    return {
-      'idClient':this.idClient,
-      'total':this.total
-    };
+  Map<String, dynamic> toDict() {
+    return {'id_client': this.idClient, 'total': this.total};
   }
 }
 
@@ -35,7 +32,7 @@ class TransactionResponse extends Generic {
     purchases = List<PurchasedResponse>.from(
       json['purchases'].map((x) => PurchasedResponse.fromJson(x)),
     );
-    date = json['date'];
+    date = DateTime.parse(json['date']);
     total = json['total'];
   }
 }

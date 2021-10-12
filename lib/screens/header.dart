@@ -1,3 +1,5 @@
+import 'package:ecommerce/models/providers/ProductList.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -6,6 +8,7 @@ import 'package:ecommerce/services/handlers/authHandler.dart';
 
 import 'package:ecommerce/util/alerts.dart';
 import 'package:ecommerce/constants/constants.dart';
+import 'package:provider/src/provider.dart';
 
 class Header extends StatefulWidget {
   final AuthHandler authHandler = AuthHandler();
@@ -38,13 +41,22 @@ class _HeaderState extends State<Header> {
 
   @override
   Widget build(BuildContext context) {
+    final int productList = context.watch<ProductCart>().products.length;
     return Container(
       color: Palette.mainColor,
       height: 100,
       child: Row(
         children: [
           Container(
-            child: Image.asset('images/logo.png'),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(45),
+              child: Image.asset(
+                'images/logo.png',
+                width: 90,
+                height: 90,
+                fit: BoxFit.fill,
+              ),
+            ),
             padding: EdgeInsets.only(left: 50, right: 50, top: 10, bottom: 10),
           ),
           Expanded(
@@ -106,60 +118,95 @@ class _HeaderState extends State<Header> {
                                     'Bienvenido',
                                     style: TextStyle(color: Color(0xFFC2C2C2)),
                                   ),
-                                  TextButton(
-                                    style: TextButton.styleFrom(
-                                      textStyle: TextStyle(color: Colors.white),
-                                    ),
-                                    onPressed: () => modal(
-                                      context,
-                                      title: 'Bienvenido',
-                                      content: SizedBox(
-                                        height: 150,
-                                        width: 100,
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            TextField(
-                                                decoration: InputDecoration(
-                                                    border:
-                                                        OutlineInputBorder(),
-                                                    hintText:
-                                                        'Correo Electronico'),
-                                                onChanged: (email) {
-                                                  this.email = email;
-                                                }),
-                                            TextField(
-                                              obscureText: true,
-                                              decoration: InputDecoration(
-                                                  border: OutlineInputBorder(),
-                                                  hintText: 'Contraseña'),
-                                              onChanged: (password) {
-                                                this.password = password;
-                                              },
-                                            ),
-                                          ],
-                                        ),
+                                  Row(
+                                    children: [
+                                      FutureBuilder(
+                                        builder: (BuildContext context,
+                                            AsyncSnapshot<String> snapshot) {
+                                          if (snapshot.hasData) {
+                                            return Text('Bienvenido Usuario');
+                                          } else {
+                                            if (snapshot.hasError) {
+                                              return Text(
+                                                'Error',
+                                                style: TextStyle(
+                                                  color: Color(0xFFC2C2C2),
+                                                ),
+                                              );
+                                            }
+                                            return TextButton(
+                                              style: TextButton.styleFrom(
+                                                textStyle: TextStyle(
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              onPressed: () => modal(
+                                                context,
+                                                title: 'Bienvenido',
+                                                content: SizedBox(
+                                                  height: 150,
+                                                  width: 100,
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      TextField(
+                                                          decoration: InputDecoration(
+                                                              border:
+                                                                  OutlineInputBorder(),
+                                                              hintText:
+                                                                  'Correo Electronico'),
+                                                          onChanged: (email) {
+                                                            this.email = email;
+                                                          }),
+                                                      TextField(
+                                                        obscureText: true,
+                                                        decoration: InputDecoration(
+                                                            border:
+                                                                OutlineInputBorder(),
+                                                            hintText:
+                                                                'Contraseña'),
+                                                        onChanged: (password) {
+                                                          this.password =
+                                                              password;
+                                                        },
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed: () async {
+                                                      return await _login(
+                                                          context);
+                                                    },
+                                                    child: Text(
+                                                      'Iniciar Sesión',
+                                                      style: Style.labelSearch,
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                              child: Text('Iniciar sesión',
+                                                  style: Style.labelSearch),
+                                            );
+                                          }
+                                        },
                                       ),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () async {
-                                            return await _login(context);
-                                          },
-                                          child: Text('Iniciar Sesión'),
-                                        )
-                                      ],
-                                    ),
-                                    child: const Text('Iniciar sesión'),
+                                      Text('/', style: Style.labelSearch),
+                                      TextButton(
+                                        style: TextButton.styleFrom(
+                                          textStyle:
+                                              TextStyle(color: Colors.white),
+                                        ),
+                                        onPressed: () => Navigator.pushNamed(
+                                            context, '/register'),
+                                        child: Text('Registrarse',
+                                            style: Style.labelSearch),
+                                      )
+                                    ],
                                   ),
-                                  TextButton(
-                                    style: TextButton.styleFrom(
-                                      textStyle: TextStyle(color: Colors.white),
-                                    ),
-                                    onPressed: () => Navigator.pushNamed(
-                                        context, '/register'),
-                                    child: const Text('Registrarse'),
-                                  )
                                 ],
                               ),
                             )
@@ -183,8 +230,10 @@ class _HeaderState extends State<Header> {
                                 color: Colors.white,
                               ),
                               SizedBox(width: 10),
-                              Icon(
-                                Icons.house_outlined,
+                              IconButton(
+                                onPressed: () =>
+                                    Navigator.pushNamed(context, '/'),
+                                icon: Icon(Icons.house_outlined),
                                 color: Colors.white,
                               )
                             ],
@@ -197,16 +246,46 @@ class _HeaderState extends State<Header> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(
-                            Icons.shopping_cart_outlined,
-                            size: 30,
-                            color: Colors.white,
+                          Stack(
+                            children: [
+                              TextButton(
+                                child: Icon(
+                                  Icons.shopping_cart_outlined,
+                                  size: 30,
+                                  color: Colors.white,
+                                ),
+                                onPressed: () =>
+                                    Navigator.pushNamed(context, '/cart'),
+                              ),
+                              productList > 0
+                                  ? Container(
+                                      height: 18,
+                                      width: 20,
+                                      margin: EdgeInsets.only(left: 20),
+                                      decoration: BoxDecoration(
+                                        color: Colors.red,
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          productList.toString(),
+                                          style: Style.labelSearch,
+                                        ),
+                                      ),
+                                    )
+                                  : SizedBox.shrink(),
+                            ],
                           ),
-                          Icon(
-                            Icons.flag_outlined,
-                            size: 30,
-                            color: Colors.white,
-                          ),
+                          SizedBox(height: 10),
+                          IconButton(
+                            onPressed: () =>
+                                Navigator.pushNamed(context, '/history'),
+                            icon: Icon(
+                              Icons.account_balance_wallet_outlined,
+                              size: 30,
+                              color: Colors.white,
+                            ),
+                          )
                         ],
                       ),
                     ),

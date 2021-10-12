@@ -13,12 +13,12 @@ class PurchasedRequest {
     required this.cost,
   });
 
-  Map<String,dynamic> toDict(){
+  Map<String, dynamic> toDict() {
     return {
-      'idTransaccion':this.idTransaction,
-      'idProduct':this.idProduct,
-      'amount':this.amount,
-      'cost':this.cost
+      'id_transaction': this.idTransaction,
+      'id_product': this.idProduct,
+      'amount': this.amount,
+      'cost': this.cost
     };
   }
 }

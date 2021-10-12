@@ -35,15 +35,16 @@ class ProductResponse extends Generic {
   late final String mainImage;
   late final List<dynamic> images;
 
-  ProductResponse(
-      {required this.id,
-      required this.name,
-      required this.amount,
-      required this.category,
-      required this.description,
-      required this.cost,
-      required this.mainImage,
-      required this.images});
+  ProductResponse({
+    required this.id,
+    required this.name,
+    required this.amount,
+    required this.category,
+    required this.description,
+    required this.cost,
+    required this.mainImage,
+    required this.images,
+  });
   ProductResponse.fromJson(dynamic json) {
     id = json['id'];
     name = json['name'];
@@ -51,7 +52,7 @@ class ProductResponse extends Generic {
     category = CategoryResponse.fromJson(json['category']);
     description = json['description'];
     cost = json['cost'];
-    mainImage = json['mainImage'] ?? '';
+    mainImage = json['mainImage'];
     images = json['images'];
   }
 }

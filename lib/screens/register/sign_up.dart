@@ -23,6 +23,7 @@ class _SignUp extends State<SignUp> {
       location = "",
       password = "",
       passwordVerification = "";
+  final _formKey = GlobalKey<FormState>();
   Future<List<IdentifierTypeResponse>> getIdentifierTypes() async {
     final List<IdentifierTypeResponse> identifierTypes =
         await widget.identifierTypeHandler.getAllTypes();
@@ -31,34 +32,26 @@ class _SignUp extends State<SignUp> {
   }
 
   Future<dynamic> registerUser(BuildContext context) async {
-    late final String title, content;
-    if (password == passwordVerification) {
-      final ClientRequest clientRequest = ClientRequest(
-        identifier: identifier,
-        name: name,
-        email: email,
-        location: location,
-        password: password,
-        idIdentifierType: idIdentifierType,
-        credits: 0,
-      );
-      final bool isUserCreated =
-          await widget.clientHandler.register(clientRequest);
-      if (isUserCreated) {
-        Navigator.pushNamed(context, '/');
-      } else {
-        title = "No pudimos registrarte";
-        content = "Por favor intenta de nuevo";
-      }
-    } else {
-      title = "Las contraseñas no coinciden";
-      content = "Port favor verifica que las contraseñas coincidan";
-    }
-    return modal(
-      context,
-      title: title,
-      content: Text(content),
+    final ClientRequest clientRequest = ClientRequest(
+      identifier: identifier,
+      name: name,
+      email: email,
+      location: location,
+      password: password,
+      idIdentifierType: idIdentifierType,
+      credits: 0,
     );
+    final bool isUserCreated =
+        await widget.clientHandler.register(clientRequest);
+    if (isUserCreated) {
+      Navigator.pushNamed(context, '/');
+    } else {
+      return modal(
+        context,
+        title: 'No pudimos registrarte',
+        content: Text('Por favor intenta de nuevo'),
+      );
+    }
   }
 
   @override
@@ -72,102 +65,149 @@ class _SignUp extends State<SignUp> {
               margin: EdgeInsets.all(20),
               child: Padding(
                 padding: EdgeInsets.all(20),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Text(
-                      "Registro",
-                      style: TextStyle(color: Colors.blue, fontSize: 50),
-                      textAlign: TextAlign.left,
-                    ),
-                    FutureBuilder(
-                      builder: (BuildContext context,
-                          AsyncSnapshot<List<IdentifierTypeResponse>>
-                              snapshot) {
-                        if (snapshot.hasData) {
-                          final List<IdentifierTypeResponse>? identifierTypes =
-                              snapshot.data;
-                          return DropdownButton<String>(
-                            value: idIdentifierType,
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                idIdentifierType = newValue ?? "";
-                              });
-                            },
-                            items: identifierTypes!
-                                .map((IdentifierTypeResponse identifierType) {
-                              return DropdownMenuItem<String>(
-                                value: identifierType.id,
-                                child: Text(identifierType.name),
-                                key: Key(identifierType.id),
-                              );
-                            }).toList(),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Text(
+                        "Registro",
+                        style: TextStyle(color: Colors.blue, fontSize: 50),
+                        textAlign: TextAlign.left,
+                      ),
+                      FutureBuilder(
+                        builder: (BuildContext context,
+                            AsyncSnapshot<List<IdentifierTypeResponse>>
+                                snapshot) {
+                          if (snapshot.hasData) {
+                            final List<IdentifierTypeResponse>?
+                                identifierTypes = snapshot.data;
+                            return DropdownButton<String>(
+                              value: idIdentifierType,
+                              onChanged: (String? value) {
+                                if (value != null || value!.isNotEmpty) {
+                                  idIdentifierType = value;
+                                }
+                              },
+                              items: identifierTypes!
+                                  .map((IdentifierTypeResponse identifierType) {
+                                return DropdownMenuItem<String>(
+                                  value: identifierType.id,
+                                  child: Text(identifierType.name),
+                                  key: Key(identifierType.id),
+                                );
+                              }).toList(),
+                            );
+                          }
+                          return Center(
+                            child: CircularProgressIndicator(),
                           );
-                        }
-                        return Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      },
-                      future: getIdentifierTypes(),
-                    ),
-                    TextField(
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          identifier = newValue ?? "";
-                        });
-                      },
-                      decoration: InputDecoration(
-                        labelText: "Identificador",
+                        },
+                        future: getIdentifierTypes(),
                       ),
-                    ),
-                    TextField(
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          name = newValue ?? "";
-                        });
-                      },
-                      decoration: InputDecoration(
-                        labelText: "Nombre",
+                      TextFormField(
+                        validator: (String? value) {
+                          if (value == null || value.isEmpty) {
+                            return "Por favor ingresa un valor";
+                          } else {
+                            identifier = value;
+                            return null;
+                          }
+                        },
+                        decoration: InputDecoration(
+                          labelText: "Identificador",
+                        ),
                       ),
-                    ),
-                    TextField(
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          email = newValue ?? "";
-                        });
-                      },
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: InputDecoration(
-                        labelText: "Correo Electronico",
+                      TextFormField(
+                        validator: (String? value) {
+                          if (value == null || value.isEmpty) {
+                            return "Por favor ingresa un valor";
+                          } else {
+                            name = value;
+                            return null;
+                          }
+                        },
+                        decoration: InputDecoration(
+                          labelText: "Nombre",
+                        ),
                       ),
-                    ),
-                    TextField(
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          password = newValue ?? "";
-                        });
-                      },
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        labelText: "Contraseña",
+                      TextFormField(
+                        validator: (String? value) {
+                          if (value == null || value.isEmpty) {
+                            return "Por favor ingresa un valor";
+                          } else {
+                            email = value;
+                            return null;
+                          }
+                        },
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: InputDecoration(
+                          labelText: "Correo Electronico",
+                        ),
                       ),
-                    ),
-                    TextField(
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          passwordVerification = newValue ?? "";
-                        });
-                      },
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        labelText: "Confirmar Contraseña",
+                      TextFormField(
+                        validator: (String? value) {
+                          if (value == null || value.isEmpty) {
+                            return "Por favor ingresa un valor";
+                          } else {
+                            location = value;
+                            return null;
+                          }
+                        },
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: InputDecoration(
+                          labelText: "Ubicacion",
+                        ),
                       ),
-                    ),
-                    ElevatedButton(
-                      onPressed: () => registerUser(context),
-                      child: Text("Registrarse"),
-                    )
-                  ],
+                      TextFormField(
+                        validator: (String? value) {
+                          if (value == null || value.isEmpty) {
+                            return "Por favor ingresa un valor";
+                          } else {
+                            password = value;
+                            return null;
+                          }
+                        },
+                        obscureText: true,
+                        decoration: InputDecoration(
+                          labelText: "Contraseña",
+                        ),
+                      ),
+                      TextFormField(
+                        validator: (String? value) {
+                          if (value == null || value.isEmpty) {
+                            return "Por favor ingresa un valor";
+                          } else {
+                            passwordVerification = value;
+                            return null;
+                          }
+                        },
+                        obscureText: true,
+                        decoration: InputDecoration(
+                          labelText: "Confirmar Contraseña",
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          String verification;
+                          if (_formKey.currentState!.validate()) {
+                            if (password == passwordVerification) {
+                              verification = 'Procesando la informacion';
+                              registerUser(context);
+                            } else {
+                              verification = 'Las contraseñas no coinciden';
+                            }
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(verification),
+                              ),
+                            );
+                          }
+                        },
+                        child: Text("Registrarse"),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
