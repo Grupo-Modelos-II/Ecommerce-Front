@@ -44,10 +44,11 @@ class _ProductState extends State<ProductScreen> {
             await transactionHandler.createTransaction(request);
 
         PurchasedRequest requestDataPurchase = PurchasedRequest(
-            idTransaction: trasactionCreated.id,
-            idProduct: product.id,
-            amount: product.amount,
-            cost: product.cost);
+          idTransaction: trasactionCreated.id,
+          idProduct: product.id,
+          amount: 1,
+          cost: product.cost,
+        );
 
         bool isPurchasedCreated =
             await purchaseHandler.createPurchase(requestDataPurchase);

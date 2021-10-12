@@ -39,14 +39,16 @@ class _CartState extends State<CartScreen> {
         bool isPurchased = true;
         products.forEach((ProductAtCart product) async {
           PurchasedRequest requestDataPurchase = PurchasedRequest(
-              idTransaction: trasactionCreated.id,
-              idProduct: product.product.id,
-              amount: product.amount,
-              cost: product.product.cost);
+            idTransaction: trasactionCreated.id,
+            idProduct: product.product.id,
+            amount: product.amount,
+            cost: 0,
+          );
           isPurchased &=
               await purchaseHandler.createPurchase(requestDataPurchase);
         });
         if (isPurchased) {
+          context.read<ProductCart>().clearProducts();
           Navigator.pushNamed(context, '/');
         } else {
           throw Exception();

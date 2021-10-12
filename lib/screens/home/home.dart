@@ -38,6 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           Card(
                             color: Colors.white,
                             child: Column(
+                              mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Padding(
@@ -48,13 +49,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                     style: Style.cardTitle,
                                   ),
                                 ),
-                                Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  height: ((products.length % 4) + 1) * 500,
+                                Flexible(
+                                  fit: FlexFit.loose,
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(
-                                        vertical: 20.0),
+                                      vertical: 20.0,
+                                    ),
                                     child: GridView.count(
+                                      shrinkWrap: true,
                                       crossAxisCount: 4,
                                       children: products
                                           .map(
