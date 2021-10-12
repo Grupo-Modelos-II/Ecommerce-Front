@@ -1,5 +1,19 @@
+import 'package:ecommerce/util/request_conversor.dart';
+
 import 'generic.dart';
 import 'package:ecommerce/models/category.dart';
+
+class ProductImage extends Generic {
+  late String idProduct;
+  late String image;
+
+  ProductImage({required this.idProduct, required this.image});
+
+  ProductImage.fromJson(dynamic json) {
+    idProduct = json['id_product'];
+    image = json['image'];
+  }
+}
 
 class ProductRequest {
   final String name;
@@ -33,7 +47,7 @@ class ProductResponse extends Generic {
   late final int cost;
 
   late final String mainImage;
-  late final List<dynamic> images;
+  late final List<ProductImage> images;
 
   ProductResponse({
     required this.id,
@@ -53,6 +67,6 @@ class ProductResponse extends Generic {
     description = json['description'];
     cost = json['cost'];
     mainImage = json['mainImage'];
-    images = json['images'];
+    images = fromJsonListProductImage(json['images']);
   }
 }

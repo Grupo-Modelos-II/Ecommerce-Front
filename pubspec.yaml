@@ -35,6 +35,7 @@ dependencies:
   font_awesome_flutter: ^9.1.0
   jwt_decoder: ^2.0.1
   provider: ^6.0.1
+  intl: ^0.17.0
 
 dev_dependencies:
   environment_config: ^3.0.0

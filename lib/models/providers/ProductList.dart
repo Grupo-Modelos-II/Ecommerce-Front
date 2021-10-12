@@ -20,6 +20,7 @@ class ProductCart with ChangeNotifier, DiagnosticableTreeMixin {
     } else {
       _products.add(ProductAtCart(product: product, amount: 1));
     }
+    notifyListeners();
   }
 
   void removeProduct(ProductAtCart product) {

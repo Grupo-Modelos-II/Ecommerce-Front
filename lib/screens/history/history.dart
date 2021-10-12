@@ -1,5 +1,7 @@
+import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/models/providers/ProductList.dart'
     show ProductAtCart, ProductCart;
+import 'package:ecommerce/models/purchased.dart';
 import 'package:ecommerce/models/transaction.dart';
 import 'package:ecommerce/services/handlers/transactionHandler.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,6 +11,8 @@ import 'package:ecommerce/screens/footer.dart';
 import 'package:ecommerce/screens/header.dart';
 import 'package:ecommerce/constants/constants.dart';
 import 'package:provider/src/provider.dart';
+
+import 'package:intl/intl.dart';
 
 class HistoryScreen extends StatefulWidget {
   @override
@@ -29,6 +33,18 @@ class _HistoryScreenState extends State<HistoryScreen> {
           AsyncSnapshot<List<TransactionResponse>> snapshot) {
         if (snapshot.hasData && snapshot.data != null) {
           List<TransactionResponse> transactions = snapshot.data ?? [];
+          List<PurchasedItem> products = [];
+          for (TransactionResponse transaction in transactions) {
+            for (PurchasedResponse purchased in transaction.purchases) {
+              products.add(
+                PurchasedItem(
+                  transaction: transaction,
+                  purchased: purchased,
+                  product: purchased.product,
+                ),
+              );
+            }
+          }
           return Scaffold(
             body: SingleChildScrollView(
               child: Column(
@@ -48,15 +64,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
                               elevation: 5,
                               child: Padding(
                                 padding: const EdgeInsets.all(20.0),
-                                child: Column(
-                                  children: transactions
-                                      .map((TransactionResponse transaction) =>
-                                          PurchasedItem(
-                                            transaction: transaction,
-                                            key: Key(transaction.id),
-                                          ))
-                                      .toList(),
-                                ),
+                                child: products.length > 0
+                                    ? Column(
+                                        children: products,
+                                      )
+                                    : Text("No tienes productos registrados"),
                               ),
                             )
                           ],
@@ -86,7 +98,15 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
 class PurchasedItem extends StatelessWidget {
   TransactionResponse transaction;
-  PurchasedItem({required this.transaction, Key? key}) : super(key: key);
+  PurchasedResponse purchased;
+  ProductResponse product;
+
+  PurchasedItem(
+      {required this.transaction,
+      required this.purchased,
+      required this.product,
+      Key? key})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -95,7 +115,7 @@ class PurchasedItem extends StatelessWidget {
         children: [
           ClipRRect(
             child: Image.network(
-              'images/notfound.png',
+              product.mainImage,
               width: 100,
               height: 100,
               fit: BoxFit.fill,
@@ -118,21 +138,22 @@ class PurchasedItem extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('product.product.name', style: Style.cartItemTitle),
+                      Text(product.name, style: Style.cartItemTitle),
                       SizedBox(height: 10),
-                      Text('product.product.description',
-                          style: Style.cartItemText),
-                      Text('Cantidad: ', style: Style.cartItemText)
+                      Text(product.description, style: Style.cartItemText),
+                      Text(purchased.amount.toString(),
+                          style: Style.cartItemText)
                     ],
                   ),
                 ),
-                Text('\$ product.product.cost}', style: Style.cartItemPrice),
+                Text('\$ ${purchased.cost}', style: Style.cartItemPrice),
               ],
             ),
           ),
-          Text('\$ product.product.addres}', style: Style.cartItemPrice),
+          Text('${transaction.client.location}', style: Style.cartItemPrice),
           SizedBox(width: 15),
-          Text('\$ product.product.date}', style: Style.cartItemPrice),
+          Text('${DateFormat('yyyy-MM-dd').format(transaction.date)}',
+              style: Style.cartItemPrice),
         ],
       ),
     );

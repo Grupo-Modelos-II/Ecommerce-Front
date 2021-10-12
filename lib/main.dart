@@ -21,10 +21,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Ecommerce',
       debugShowCheckedModeBanner: false,
+      title: 'Ecommerce',
       routes: {
-        '/': (BuildContext context) => HistoryScreen(),
+        '/': (BuildContext context) => HomeScreen(),
         '/register': (BuildContext context) => SignUp(),
         '/product': (BuildContext context) => ProductScreen(),
         '/cart': (BuildContext context) => CartScreen(),

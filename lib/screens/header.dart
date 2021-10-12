@@ -1,4 +1,5 @@
 import 'package:ecommerce/models/providers/ProductList.dart';
+import 'package:ecommerce/util/logger.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -278,8 +279,20 @@ class _HeaderState extends State<Header> {
                           ),
                           SizedBox(height: 10),
                           IconButton(
-                            onPressed: () =>
-                                Navigator.pushNamed(context, '/history'),
+                            onPressed: () async {
+                              final String token =
+                                  await widget.authHandler.getToken();
+                              LoggerUtil.logger.d(token);
+                              if (token != '') {
+                                Navigator.pushNamed(context, '/history');
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text("No ha iniciado sesion"),
+                                  ),
+                                );
+                              }
+                            },
                             icon: Icon(
                               Icons.account_balance_wallet_outlined,
                               size: 30,

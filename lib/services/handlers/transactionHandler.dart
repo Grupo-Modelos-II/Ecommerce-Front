@@ -12,13 +12,10 @@ import 'package:ecommerce/models/transaction.dart';
 class TransactionHandler {
   HttpClient _httpClient = HttpClient();
   AuthHandler _authHandler = AuthHandler();
-  Future<List<TransactionResponse>> getAllTransactions() async {
-    final Response response = await _httpClient.get('/transaction');
-    final List<dynamic> transactionList = json.decode(response.body);
-    return fromJsonListTransaction(transactionList);
-  }
 
   Future<List<TransactionResponse>> getTransactionsByClient() async {
+    _httpClient.addHeader(
+        "Authorization", "Bearer ${await _authHandler.getToken()}");
     final Map<String, dynamic> claims = await _authHandler.getTokenClaims();
     final Response response =
         await _httpClient.get("/transaction/client/${claims['id_client']}");

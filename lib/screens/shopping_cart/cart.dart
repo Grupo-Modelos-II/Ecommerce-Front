@@ -31,8 +31,9 @@ class _CartState extends State<CartScreen> {
       final String token = await authHandler.getToken();
       if (token.isNotEmpty) {
         final Map<String, dynamic> claims = await authHandler.getTokenClaims();
-        TransactionRequest request =
-            TransactionRequest(idClient: claims['id_client'], total: 0);
+        TransactionRequest request = TransactionRequest(
+            idClient: claims['id_client'],
+            total: context.read<ProductCart>().getCostCart());
         TransactionResponse trasactionCreated =
             await transactionHandler.createTransaction(request);
 
@@ -42,7 +43,7 @@ class _CartState extends State<CartScreen> {
             idTransaction: trasactionCreated.id,
             idProduct: product.product.id,
             amount: product.amount,
-            cost: 0,
+            cost: product.product.cost * product.amount,
           );
           isPurchased &=
               await purchaseHandler.createPurchase(requestDataPurchase);

@@ -38,8 +38,8 @@ class _ProductState extends State<ProductScreen> {
       final String token = await authHandler.getToken();
       if (token.isNotEmpty) {
         final Map<String, dynamic> claims = await authHandler.getTokenClaims();
-        TransactionRequest request =
-            TransactionRequest(idClient: claims['id_client'], total: 0);
+        TransactionRequest request = TransactionRequest(
+            idClient: claims['id_client'], total: product.cost);
         TransactionResponse trasactionCreated =
             await transactionHandler.createTransaction(request);
 
@@ -101,7 +101,7 @@ class _ProductState extends State<ProductScreen> {
                                     MainAxisAlignment.spaceEvenly,
                                 children: product.images
                                     .map((image) =>
-                                        secondaryImage(image, context))
+                                        secondaryImage(image.image, context))
                                     .toList(),
                               ),
                             ),
@@ -175,11 +175,9 @@ class _ProductState extends State<ProductScreen> {
                                           MaterialStateProperty.all(
                                               Color(0xFFBFD9F6))),
                                   onPressed: () {
-                                    setState(() {
-                                      context
-                                          .read<ProductCart>()
-                                          .addProduct(product);
-                                    });
+                                    context
+                                        .read<ProductCart>()
+                                        .addProduct(product);
                                   },
                                   child: Text('Agregar al carrito',
                                       style: Style.btnCart),

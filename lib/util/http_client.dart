@@ -46,7 +46,7 @@ class HttpClient {
       {Map<String, Object>? queryParams}) async {
     LoggerUtil.logger.d("Sending GET request");
     var url = this._getTypeRequest(endPoint, queryParams: queryParams);
-    var response = await http.get(url);
+    var response = await http.get(url, headers: this._headers);
     LoggerUtil.logger.d(response.body);
     return response;
   }

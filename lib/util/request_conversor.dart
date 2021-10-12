@@ -37,6 +37,14 @@ ProductResponse fromJsonProduct(json) {
   return ProductResponse.fromJson(json);
 }
 
+List<ProductImage> fromJsonListProductImage(List<dynamic> json) {
+  return List.from(json.map((element) => fromJsonProductImage(element)));
+}
+
+ProductImage fromJsonProductImage(json) {
+  return ProductImage.fromJson(json);
+}
+
 List<PurchasedResponse> fromJsonListPurchased(List<dynamic> json) {
   return List.from(json.map((element) => fromJsonPurchased(element)));
 }
