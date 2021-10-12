@@ -248,8 +248,8 @@ class _HeaderState extends State<Header> {
                         children: [
                           Stack(
                             children: [
-                              IconButton(
-                                icon: Icon(
+                              TextButton(
+                                child: Icon(
                                   Icons.shopping_cart_outlined,
                                   size: 30,
                                   color: Colors.white,
@@ -276,11 +276,16 @@ class _HeaderState extends State<Header> {
                                   : SizedBox.shrink(),
                             ],
                           ),
-                          Icon(
-                            Icons.flag_outlined,
-                            size: 30,
-                            color: Colors.white,
-                          ),
+                          SizedBox(height: 10),
+                          TextButton(
+                            onPressed: () =>
+                                Navigator.pushNamed(context, '/history'),
+                            child: Icon(
+                              Icons.account_balance_wallet_outlined,
+                              size: 30,
+                              color: Colors.white,
+                            ),
+                          )
                         ],
                       ),
                     ),
