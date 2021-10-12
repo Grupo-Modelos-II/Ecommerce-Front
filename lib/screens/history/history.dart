@@ -97,9 +97,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
 }
 
 class PurchasedItem extends StatelessWidget {
-  TransactionResponse transaction;
-  PurchasedResponse purchased;
-  ProductResponse product;
+  final TransactionResponse transaction;
+  final PurchasedResponse purchased;
+  final ProductResponse product;
 
   PurchasedItem(
       {required this.transaction,
