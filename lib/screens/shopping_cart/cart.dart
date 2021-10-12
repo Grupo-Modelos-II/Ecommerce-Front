@@ -17,8 +17,8 @@ class CartScreen extends StatefulWidget {
 class _CartState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
-    final List<ProductResponse> products =
-        context.watch<ProductCart>().products;
+    final List<ProductAtCart> products =
+        context.watch<ProductAtCart>().products;
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -151,7 +151,7 @@ class _CartState extends State<CartScreen> {
 }
 
 class Item extends StatelessWidget {
-  final ProductResponse product;
+  final ProductAtCart product;
   Item({required this.product, Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -185,6 +185,7 @@ class Item extends StatelessWidget {
                   Text(product.name, style: Style.cartItemTitle),
                   SizedBox(height: 10),
                   Text(product.description, style: Style.cartItemText),
+                  Text('Cantidad: ${product.amount}', style: Style.cartItemText)
                 ],
               ),
             ),

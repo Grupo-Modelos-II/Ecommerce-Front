@@ -230,8 +230,10 @@ class _HeaderState extends State<Header> {
                                 color: Colors.white,
                               ),
                               SizedBox(width: 10),
-                              Icon(
-                                Icons.house_outlined,
+                              IconButton(
+                                onPressed: () =>
+                                    Navigator.pushNamed(context, '/'),
+                                icon: Icon(Icons.house_outlined),
                                 color: Colors.white,
                               )
                             ],
