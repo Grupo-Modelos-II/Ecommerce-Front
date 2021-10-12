@@ -18,6 +18,14 @@ class TransactionHandler {
     return fromJsonListTransaction(transactionList);
   }
 
+  Future<List<TransactionResponse>> getTransactionsByClient() async {
+    final Map<String, dynamic> claims = await _authHandler.getTokenClaims();
+    final Response response =
+        await _httpClient.get("/transaction/client/${claims['id_client']}");
+    final List<dynamic> transactionList = json.decode(response.body);
+    return fromJsonListTransaction(transactionList);
+  }
+
   Future<TransactionResponse> getTransaction(String id) async {
     final Response response = await _httpClient.get('/transaction/$id');
     final dynamic transaction = json.decode(response.body);

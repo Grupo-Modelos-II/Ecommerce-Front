@@ -28,6 +28,7 @@ class MyApp extends StatelessWidget {
         '/register': (BuildContext context) => SignUp(),
         '/product': (BuildContext context) => ProductScreen(),
         '/cart': (BuildContext context) => CartScreen(),
+        '/history': (BuildContext context) => HistoryScreen(),
       },
     );
   }

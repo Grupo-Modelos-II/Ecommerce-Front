@@ -1,17 +1,12 @@
-import 'package:ecommerce/models/providers/ProductList.dart';
-import 'package:ecommerce/models/purchased.dart';
+import 'package:ecommerce/models/providers/ProductList.dart'
+    show ProductAtCart, ProductCart;
 import 'package:ecommerce/models/transaction.dart';
-import 'package:ecommerce/services/handlers/authHandler.dart';
-import 'package:ecommerce/services/handlers/purchaseHandler.dart';
 import 'package:ecommerce/services/handlers/transactionHandler.dart';
-import 'package:ecommerce/util/alerts.dart';
-import 'package:ecommerce/util/logger.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:ecommerce/screens/footer.dart';
 import 'package:ecommerce/screens/header.dart';
-import 'package:ecommerce/constants/colors.dart';
 import 'package:ecommerce/constants/constants.dart';
 import 'package:provider/src/provider.dart';
 
@@ -21,52 +16,77 @@ class HistoryScreen extends StatefulWidget {
 }
 
 class _HistoryScreenState extends State<HistoryScreen> {
+  final TransactionHandler transactionHandler = TransactionHandler();
+  Future<List<TransactionResponse>> getTransactionsByClient() async {
+    return await transactionHandler.getTransactionsByClient();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final List<ProductAtCart> products = context.watch<ProductCart>().products;
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Header(),
-            Container(
-              color: Color(0xFFf8f8f8),
-              child: Padding(
-                padding: const EdgeInsets.all(40),
-                child: Expanded(
-                  child: Column(
-                    children: [
-                      Text('Historial de compras', style: Style.cardTitle),
-                      SizedBox(height: 15),
-                      Card(
-                        elevation: 5,
-                        child: Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: Column(
-                            children: [
-                              PurchasedItem(),
-                              PurchasedItem(),
-                              PurchasedItem(),
-                              PurchasedItem(),
-                            ],
-                          ),
+    return FutureBuilder(
+      future: getTransactionsByClient(),
+      builder: (BuildContext context,
+          AsyncSnapshot<List<TransactionResponse>> snapshot) {
+        if (snapshot.hasData && snapshot.data != null) {
+          List<TransactionResponse> transactions = snapshot.data ?? [];
+          return Scaffold(
+            body: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Header(),
+                  Container(
+                    color: Color(0xFFf8f8f8),
+                    child: Padding(
+                      padding: const EdgeInsets.all(40),
+                      child: Expanded(
+                        child: Column(
+                          children: [
+                            Text('Historial de compras',
+                                style: Style.cardTitle),
+                            SizedBox(height: 15),
+                            Card(
+                              elevation: 5,
+                              child: Padding(
+                                padding: const EdgeInsets.all(20.0),
+                                child: Column(
+                                  children: transactions
+                                      .map((TransactionResponse transaction) =>
+                                          PurchasedItem(
+                                            transaction: transaction,
+                                            key: Key(transaction.id),
+                                          ))
+                                      .toList(),
+                                ),
+                              ),
+                            )
+                          ],
                         ),
-                      )
-                    ],
+                      ),
+                    ),
                   ),
-                ),
+                  Footer(),
+                ],
               ),
             ),
-            Footer(),
-          ],
-        ),
-      ),
+          );
+        } else {
+          if (snapshot.hasError) {
+            return Center(
+              child: Text('Error al cargar los datos'),
+            );
+          }
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      },
     );
   }
 }
 
 class PurchasedItem extends StatelessWidget {
-  PurchasedItem({Key? key}) : super(key: key);
+  TransactionResponse transaction;
+  PurchasedItem({required this.transaction, Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Padding(

@@ -277,10 +277,10 @@ class _HeaderState extends State<Header> {
                             ],
                           ),
                           SizedBox(height: 10),
-                          TextButton(
+                          IconButton(
                             onPressed: () =>
                                 Navigator.pushNamed(context, '/history'),
-                            child: Icon(
+                            icon: Icon(
                               Icons.account_balance_wallet_outlined,
                               size: 30,
                               color: Colors.white,
