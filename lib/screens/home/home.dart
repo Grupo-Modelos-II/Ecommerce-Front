@@ -48,82 +48,29 @@ class _HomeScreenState extends State<HomeScreen> {
                                     style: Style.cardTitle,
                                   ),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 20.0),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: products
-                                        .map(
-                                          (ProductResponse product) =>
-                                              ProductCard(
-                                            product: product,
-                                            key: Key(product.id),
-                                          ),
-                                        )
-                                        .toList(),
+                                Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  height: ((products.length % 4) + 1) * 500,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 20.0),
+                                    child: GridView.count(
+                                      crossAxisCount: 4,
+                                      children: products
+                                          .map(
+                                            (ProductResponse product) =>
+                                                ProductCard(
+                                              product: product,
+                                              key: Key(product.id),
+                                            ),
+                                          )
+                                          .toList(),
+                                    ),
                                   ),
                                 )
                               ],
                             ),
                           ),
-                          SizedBox(height: 20),
-                          Card(
-                            color: Colors.white,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                    left: 20.0,
-                                    top: 20.0,
-                                  ),
-                                  child: Text(
-                                    'Ofertas',
-                                    style: Style.cardTitle,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 20.0,
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: products
-                                        .map(
-                                          (ProductResponse product) =>
-                                              ProductCard(
-                                            product: product,
-                                            key: Key(product.id),
-                                          ),
-                                        )
-                                        .toList(),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 20),
-                          Container(
-                            width: MediaQuery.of(context).size.width * 0.8,
-                            child: ElevatedButton(
-                              style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all(
-                                  Palette.mainColor,
-                                ),
-                              ),
-                              onPressed: null,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  'Ver Catálogo Completo',
-                                  style: Style.btnText,
-                                ),
-                              ),
-                            ),
-                          )
                         ],
                       ),
                     ),
@@ -179,9 +126,9 @@ class ProductCard extends StatelessWidget {
                   product.mainImage,
                   width: MediaQuery.of(context).size.width * 0.15,
                   height: MediaQuery.of(context).size.width * 0.15,
-                  errorBuilder: (BuildContext context, Object exception,
-                          StackTrace? _) =>
-                      Image.asset(
+                  errorBuilder:
+                      (BuildContext context, Object exception, StackTrace? _) =>
+                          Image.asset(
                     'images/notfound.png',
                     width: MediaQuery.of(context).size.width * 0.15,
                     height: MediaQuery.of(context).size.width * 0.15,

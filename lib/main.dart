@@ -22,6 +22,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Ecommerce',
+      debugShowCheckedModeBanner: false,
       routes: {
         '/': (BuildContext context) => HomeScreen(),
         '/register': (BuildContext context) => SignUp(),

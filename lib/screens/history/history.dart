@@ -15,12 +15,12 @@ import 'package:ecommerce/constants/colors.dart';
 import 'package:ecommerce/constants/constants.dart';
 import 'package:provider/src/provider.dart';
 
-class CartScreen extends StatefulWidget {
+class HistoryScreen extends StatefulWidget {
   @override
-  _CartState createState() => _CartState();
+  _HistoryScreenState createState() => _HistoryScreenState();
 }
 
-class _CartState extends State<CartScreen> {
+class _HistoryScreenState extends State<HistoryScreen> {
   AuthHandler authHandler = AuthHandler();
   TransactionHandler transactionHandler = TransactionHandler();
   PurchaseHandler purchaseHandler = PurchaseHandler();
